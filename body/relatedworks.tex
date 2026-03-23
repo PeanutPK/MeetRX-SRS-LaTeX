@@ -6,24 +6,79 @@
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{examples/asana-competitive-landscape.jpg}
-    \caption{Competitive Landscape by Asana}
+    \includegraphics[width=1\textwidth]{relatedworks/comparetable.png}
+    \caption{Competitive Analysis Table}
 \end{figure}
 
-<TIP: 
-Refer to an article "How to create a competitive analysis (with
-examples)" by Asana. You can use the Competitor Landscape or
-Competitor Analysis Framework for your project.
-/>
+\textbf{Otter AI} provides real-time transcription, automatic meeting summaries, and a Q\&A interface
+for querying transcripts. However, it has no task assignment capability and no mechanism for detecting
+or alerting users to topic drift.
+
+\textbf{Fireflies AI} supports transcription, summarisation, and a chatbot interface. Its task
+assignment feature is limited to its own proprietary project management integration and does not
+support arbitrary third-party tools. Topic drift detection is absent.
+
+\textbf{Spinach AI} is targeted at agile teams and offers summaries, Q\&A, and task assignment with
+broader tool integration. Like the others, it provides no real-time topic drift detection.
+
+\textbf{MeetRX} is the only solution in this comparison that addresses all four dimensions, and is the
+only product that actively detects and alerts participants to topic drift during a live meeting.
 
 \section{Literature Review}
 \label{section:literature-review}
 
-<TIP: Review academic papers or technical reports
-that are relevant to your project.
-For each source, briefly summarize its key findings and
-then explain how it informs your own design or implementation decisions.
-The goal is not just to describe what others have done,
-but to build a justification for your own technical choices.
-For example, if you chose a particular algorithm or architecture,
-cite the work that supports that decision. />
+This section reviews academic research and technical reports relevant to the design and implementation of MeetRX, focusing on four key areas: real-time transcription, meeting summarization, task allocation, topic drift detection, and agentic AI systems. These works provide the technical foundation for the design of MeetRX and how it aids in selecting appropriate metrics for evaluating the system's performance.
+
+\subsection{Real-Time Speech Analysis}
+\label{subsection:real-time-speech-analysis}
+
+Real-time speech transcription is a fundamental component of the system, enabling the automatic conversion of meeting audio into text. The study in\cite{transcription_voip_11159004} explores the integration of NLP with VoIP systems to achieve low-latency transcription. 
+
+Another work\cite{rnnt_transcription_10257856} propose to use Recurrent Neural Network Transducers models to improve accuracy and speed of transcription in noisy environments, which is crucial for real-world meeting scenarios.
+
+To evaluate the performance of the transcription module, we will use metrics such as Word Error Rate (WER)\cite{wer_eval} and latency. WER measures the accuracy of the transcription by comparing the transcribed text to a reference transcript, while latency assesses the time taken from audio input to text output.
+
+\subsection{Meeting Summarization}
+\label{subsection:meeting-summarization}
+
+Meeting summarization aims to shorten and condense the content of a meeting transcript while preserving key information. The MISeD dataset\cite{mised_paper} introduce a method for generating dialogue data, particularly for meeting scenarios, the QMSum dataset\cite{qmsum_dataset} provides annotated meeting transcripts designed for query-based summarization tasks.
+
+Evaluating summarization quality can be done using ROUGE\cite{rouge_eval} and BERTScore\cite{bertscore_eval}, which measure the overlap of n-grams and semantic similarity between the generated summary and reference summaries.
+
+\subsection{Task Allocation}
+\label{subsection:task-allocation}
+
+Task allocation is a critical component of team productivity in agile environments. The study in\cite{task_allocation_ml} explores the use of machine learning algorithms to assign tasks in distributed software development teams based on historical performance and expertise. 
+
+Similarly, the TaskAllocator framework\cite{task_allocator} proposes a recommendation-based approach that assigns tasks according to roles and past project data.
+
+These approaches highlight the potential of data-driven task assignment to reduce manual coordination and improve efficiency. By learning from historical patterns, systems can make informed decisions about task distribution from the available data.
+
+Inspired by these works, MeetRX decides to implement a task assignment feature that extracts action items from meeting transcripts and assigns them to appropriate team members based on expertise or roles.
+
+\subsection{Topic Drift Detection}
+\label{subsection:topic-drift-detection}
+
+Topic drift detection is the core feature for MeetRX, enabling real-time alerts when a meeting conversation drifts away from the agenda. The TIAGE framework\cite{tiage} introduces a methods for detecting changes in dialog using topic aware generation (GEN Encoder).
+
+Another study\cite{topic_shift} focuses on detecting topic shifts in mixed-initiative conversations, highlighting the importance of context in conversational AI systems.
+
+These studies suggest that semantic similarity and contextual embeddings are effective for identifying topic drift.
+
+Based on these findings, MeetRX will computes drift score using the embedding similarity between the current conversation and the predefined agenda. If the score exceeds a certain threshold, an alert will be triggered to notify participants of potential topic drift.
+
+\subsection{Agentic AI and Code Analysis}
+\label{subsection:agentic-ai-code-analysis}
+
+Recent advancement in agentic AI enables systems to perform complex tasks autonomously. Frameworks such as those described in\cite{code_analysis_agent} demonstrate how LLMs can be integrated with toolchains to analyze code repositories and provide insights on the user queries.
+
+In addition, the agentic AI system for the platform such as GitHub's Agentic Workflows\cite{github_agentic} and agentic code review systems\cite{agentic_code_review} show how AI can assist in automating software development tasks, including code analysis and review.
+
+Evaluating the performance of agentic AI systems involves metrics such as task success rate, response accuracy, and tool usage efficiency\cite{agentic_eval}. These metrics ensure that the system produces reliable and useful outputs.
+
+Based on these findings, MeetRX integrates an agentic AI component that allows users to query past meeting information to retrieve relevant details.
+
+\section{Summary}
+\label{section:summary}
+
+This chapter has reviewed the competitive landscape of meeting productivity tools and the relevant academic research that informs the design of MeetRX. The analysis highlights the unique features of MeetRX, particularly its real-time topic drift detection, which sets it apart from existing solutions. The literature review provides a solid foundation for the technical implementation of MeetRX and guides the selection of appropriate evaluation metrics for assessing its performance in subsequent chapters.
