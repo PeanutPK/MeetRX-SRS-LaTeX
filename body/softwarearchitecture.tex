@@ -1,6 +1,7 @@
 \chapter{Software Architecture Design}
 \label{chap:software-architecture-design}
 
+\raggedright
 \section{System Architecture Overview}
 \label{section:architecture-overview}
 <TIP: Provide a high-level description of your system's structure.
@@ -12,6 +13,7 @@ whichever best communicates your design.
 Accompany your diagram with a short paragraph explaining the key
 components and how they interact. />
 
+\raggedright
 \section{Software Design}
 \label{section:software-design}
 <TIP: Describe the runtime behavior of your system.
@@ -20,23 +22,48 @@ Focus on scenarios with non-trivial interactions between components.
 If your project involves a novel algorithm,
 describe it here and explain why you designed it this way. />
 
+\pagebreak
+
+\raggedright
 \section{AI and Data Design}
 \label{section:ai-data-design}
-
+\raggedright
 \subsection{Data Sources and Collection}
-<TIP: Describe where your data comes from. Is it collected from users,
-scraped from the web, sourced from a public dataset, or
-provided by an external API?
-Explain how much data you have or plan to collect,
-and any challenges you anticipate in obtaining it.
-Explain how data is cleaned, transformed, or prepared before use. />
+{
+    \setlength{\parindent}{2em}
+    This project will utilize publicly available datasets to train and evaluate the AI components. 
+    \vspace{1em}
+    \\The primary data sources include:
+    \begin{itemize}
+        \item \textbf{AMI Meeting Corpus}: Provides over 170 annotated meeting recordings along with transcripts, allowing the system to learn realistic meeting conversations and structures. 
+        \item \textbf{TIAGE dataset}: Used for topic drift detection, containing approximately 500 text samples focused on conversational topic classification.
+    \end{itemize}
+}
+
 \subsection{Model Design}
-<TIP: Describe the AI model or external AI service you plan to use.
-Explain why you chose it over alternatives.
-This can connect back to your competitor or literature review in Chapter 2.
-If you are training your own model, describe the architecture and
-training approach. If you are using a third-party model or API,
-describe how it is integrated into your system and any prompt design
-or fine-tuning involved. />
+{
+    \setlength{\parindent}{2em}
+    The system adopts a modular approach by integrating multiple AI models, each designed for a specific task within the meeting workflow.
+    \\[1em]For speech-to-text transcription, \textbf{WhisperX} is used due to its strong performance in real-time transcription and multilingual support. 
+    The model will convert spoken audio into text, which serves as the foundation for further processing.
+    \\[1em]For question answering, a \textbf{BERT-based model (BertQA)} is used. 
+    This model is effective at extracting precise answers from contextual data. 
+    It is integrated into an agentic system that retrieves relevant information from past meetings and generates context-aware responses.
+    \\[1em]For text summarization, the system will utilize \textbf{BART} for its strong performance in generating concise and meaningful summaries from long meeting transcripts.
+    \\[1em]For task management, the \textbf{LLaMA 3} will be used to identify and extract actionable tasks from meeting content. This model can detect responsibilities, deadlines, and action items from natural language.
+    \\[1em]All models are integrated into a pipeline where outputs from one component are used as inputs for others. 
+    For example, transcription feeds into summarization and question answering. 
+    Prompt engineering techniques are applied when interacting with large language models to ensure consistent and relevant outputs.
+    The selected models are chosen based on their effectiveness in natural language processing tasks and their ability to handle real-time conversational data.
+}
 \subsection{Evaluation}
-<TIP: Describe the metrics you plan to use to evaluate your AI model. />
+{
+    \setlength{\parindent}{2em}
+    The performance of the AI components is evaluated using task-specific metrics.
+    \\[1em]For topic drift detection, \textbf{BERTScore} is used to measure the semantic similarity between sentences, allowing the system to detect when a conversation deviates from the main topic.
+    \\[1em]For speech-to-text transcription, \textbf{Word Error Rate (WER)} is used to evaluate the accuracy of the generated transcript compared to the ground truth.
+    \\[1em]For the question answering component, evaluation includes \textbf{task success rate, correctness, and human evaluation}. These metrics assess how well the system retrieves and presents relevant information.
+    \\[1em]For text summarization, \textbf{ROUGE} metrics are used, including \textbf{ROUGE-N} and \textbf{ROUGE-L}. These measure the overlap between generated summaries and reference summaries in terms of precision, recall, and sequence similarity.
+    \\[1em]For task management, standard classification metrics such as \textbf{accuracy, precision, recall, and F1-score} are used. These are calculated using K-fold cross-validation to ensure the model performs consistently across different data splits.
+    \\[1em]Together, these evaluation metrics provide a comprehensive assessment of the system's performance across all AI components.
+}
