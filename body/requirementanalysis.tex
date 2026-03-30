@@ -4,17 +4,17 @@
 \section{Stakeholder Analysis}
 \label{section:stakeholder-analysis}
 
-\begin{description}
-    \item[Students] University students working in group projects need a tool that detects when their
-    meeting drifts off the project agenda and automatically generates meeting minutes so that all
-    members can participate in the discussion rather than taking turns as note-taker.
-    \item[Software Developers (Office Workers)] Software engineers attending daily standups and sprint
-    ceremonies benefit from automatic meeting summaries and from an agent that can surface relevant
-    decisions from past sessions, reducing repeated debate.
-    \item[Scrum Masters / Project Managers] Facilitators need visibility into whether a meeting is
-    staying on-topic and access to a historical record of decisions so they can run tighter, more
-    accountable ceremonies.
-\end{description}
+\begin{enumerate}[leftmargin=50pt]
+    \item \textbf{Student}: University students working in group projects need a tool that detects when their
+          meeting drifts off the project agenda and automatically generates meeting minutes so that all
+          members can participate in the discussion rather than taking turns as note-taker.
+    \item \textbf{Software Developers (Office Workers)}: Software engineers attending daily standups and sprint
+          ceremonies benefit from automatic meeting summaries and from an agent that can surface relevant
+          decisions from past sessions, reducing repeated debate.
+    \item \textbf{Scrum Masters / Project Managers}: Facilitators need visibility into whether a meeting is
+          staying on-topic and access to a historical record of decisions so they can run tighter, more
+          accountable ceremonies.
+\end{enumerate}
 
 \section{User Stories and Use Cases}
 \label{section:user-stories-use-cases}
@@ -25,39 +25,39 @@
     \item As a \textbf{student}, I want the system to alert me when my group's conversation goes off-topic, so that we can finish our meeting within the scheduled time.
     \item As a \textbf{student}, I want an automatic summary of each meeting, so that I do not have to assign a dedicated note-taker.
     \item As a \textbf{student}, I want to query what was decided in a previous meeting, so that I
-    do not have to re-read full transcripts.
+          do not have to re-read full transcripts.
 \end{enumerate}
 
 \subsection{Software Developer}
 \label{subsection:software-developer-user-stories}
 
-\begin{enumerate}[leftmargin=80pt]
+\begin{enumerate}[leftmargin=80pt, itemsep=0.75em, parsep=0pt]
     \item As a \textbf{software developer}, I want standup meetings to stay focused on project
-    progress, so that they finish within 15 minutes.
+          progress, so that they finish within 15 minutes.
     \item As a \textbf{software developer}, I want action items extracted automatically from the
-    meeting transcript and assigned to the correct team member, so that nothing falls through the cracks.
+          meeting transcript and assigned to the correct team member, so that nothing falls through the cracks.
     \item As a \textbf{software developer}, I want to ask the AI agent about a past architectural
-    decision, so that I do not have to search through old chat logs or documents.
+          decision, so that I do not have to search through old chat logs or documents.
 \end{enumerate}
 
 \subsection{Scrum Master}
 \label{subsection:scrum-master-user-stories}
 
-\begin{enumerate}[leftmargin=80pt]
+\begin{enumerate}[leftmargin=80pt, itemsep=0.75em, parsep=0pt, topsep=8em]
     \item As a \textbf{scrum master}, I want a real-time indicator that shows whether the current
-    discussion is on-topic, so that I can redirect the team without interrupting the conversation flow.
+          discussion is on-topic, so that I can redirect the team without interrupting the conversation flow.
     \item As a \textbf{scrum master}, I want all sprint summaries stored and indexed, so that
-    I can reference them during retrospectives.
+          I can reference them during retrospectives.
 \end{enumerate}
 
 \pagebreak
 
 \section{Use Case Diagrams}
 \label{section:use-case-diagrams}
-MeetRX use case diagram
+The use case diagram below shows that the system has two main actors: Meeting Participant and Project Manager/Leader or Scrum Master. The Meeting Participant can receive topic drift alerts, query past meetings, and view meeting summaries. The Project Manager/Leader or Scrum Master can start meetings, view meeting summaries, and manage tasks. Both actors interact with the system to ensure that meetings are productive and that important information is easily accessible.
 \begin{figure}[h]
     \centering
-    \includegraphics[height=150mm]{requirementanalysis/Usecase-Diagram.png}
+    \includegraphics[height=130mm]{requirementanalysis/Usecase-Diagram.png}
     \caption{Use Case Diagram}
 \end{figure}
 
@@ -68,53 +68,53 @@ MeetRX use case diagram
 
 \begin{tabular}{|l|p{10cm}|}
     \hline
-    \textbf{Actor} & Meeting Participant \\
+    \textbf{Actor}         & Meeting Participant                                                  \\
     \hline
-    \textbf{Precondition} & The participant is authenticated and has a meeting agenda prepared. \\
+    \textbf{Precondition}  & The participant is authenticated and has a meeting agenda prepared.  \\
     \hline
-    \textbf{Main Flow} & 1. Participant opens the MeetRX dashboard. \newline
-                        2. Participant clicks ``Start Meeting'' and enters agenda topics. \newline
-                        3. System begins audio capture and topic embedding initialisation. \newline
-                        4. Meeting session is created and all participants are notified. \\
+    \textbf{Main Flow}     & 1. Participant opens the MeetRX dashboard. \newline
+    2. Participant clicks ``Start Meeting'' and enters agenda topics. \newline
+    3. System begins audio capture and topic embedding initialisation. \newline
+    4. Meeting session is created and all participants are notified.                              \\
     \hline
     \textbf{Postcondition} & An active meeting session exists with an initialised topic baseline. \\
     \hline
 \end{tabular}
- 
+
 \vspace{1em}
- 
+
 \subsection*{UC-02: Receive Topic Drift Alert}
 
 \begin{tabular}{|l|p{10cm}|}
     \hline
-    \textbf{Actor} & Meeting Participant (all) \\
+    \textbf{Actor}            & Meeting Participant (all)                                             \\
     \hline
-    \textbf{Precondition} & A meeting session is active. \\
+    \textbf{Precondition}     & A meeting session is active.                                          \\
     \hline
-    \textbf{Main Flow} & 1. NLP module computes drift score for each utterance. \newline
-                        2. If score exceeds threshold, LLM re-evaluation is triggered. \newline
-                        3. System displays a drift alert banner visible to all participants. \newline
-                        4. Participant acknowledges the alert and guides conversation back to agenda. \\
+    \textbf{Main Flow}        & 1. NLP module computes drift score for each utterance. \newline
+    2. If score exceeds threshold, LLM re-evaluation is triggered. \newline
+    3. System displays a drift alert banner visible to all participants. \newline
+    4. Participant acknowledges the alert and guides conversation back to agenda.                     \\
     \hline
     \textbf{Alternative Flow} & If the participant dismisses the alert, the system logs the dismissal
-                                and resumes monitoring. \\
+    and resumes monitoring.                                                                           \\
     \hline
-    \textbf{Postcondition} & Alert is logged; meeting continues. \\
-\hline
+    \textbf{Postcondition}    & Alert is logged; meeting continues.                                   \\
+    \hline
 \end{tabular}
 
 
 \subsection*{UC-03: Query Past Meetings}
 \begin{tabular}{|l|p{10cm}|}
     \hline
-    \textbf{Actor} & Meeting Participant \\
+    \textbf{Actor}         & Meeting Participant                                                 \\
     \hline
-    \textbf{Precondition} & At least one completed meeting summary exists in the system. \\
+    \textbf{Precondition}  & At least one completed meeting summary exists in the system.        \\
     \hline
-    \textbf{Main Flow} & 1. Participant opens the Q\&A interface. \newline
-                        2. Participant types a natural language question. \newline
-                        3. Agentic AI retrieves relevant summaries and generates an answer. \newline
-                        4. System displays the answer with source meeting references. \\
+    \textbf{Main Flow}     & 1. Participant opens the Q\&A interface. \newline
+    2. Participant types a natural language question. \newline
+    3. Agentic AI retrieves relevant summaries and generates an answer. \newline
+    4. System displays the answer with source meeting references.                                \\
     \hline
     \textbf{Postcondition} & Participant receives an answer grounded in historical meeting data. \\
     \hline
@@ -124,62 +124,53 @@ MeetRX use case diagram
 \pagebreak
 
 \section{User Interface Design}
-\subsection{User Interface Design}
 
+% First set of wireframes
 \begin{multicols}{2}
+    \centering
+    \textbf{Landing page wireframe} \\
+    \vspace{0.2cm}
+    \includegraphics[width=0.9\linewidth]{requirementanalysis/LandingPage.png}
+    \captionof{figure}{Landing Page Wireframe}
+    \label{fig:landing}
 
-\centering
-Landing page wireframe
+    \columnbreak % Forces the next image into the second column
 
-\begin{center}
-\includegraphics[height=90mm]{requirementanalysis/LandingPage.png}
-\captionof{figure}{\\Landing Page Wireframe}
-\end{center}
+    \centering
+    \textbf{Task summary page wireframe} \\
+    \vspace{0.2cm}
+    \includegraphics[width=0.9\linewidth]{requirementanalysis/TaskSummary.png}
+    \captionof{figure}{Task Summary Page Wireframe}
+    \label{fig:summary}
+\end{multicols}
 
-\centering
-Task summary page wireframe
+\vspace{1cm} % Adds some breathing room between rows
 
-\begin{center}
-\includegraphics[height=90mm]{requirementanalysis/TaskSummary.png}
-\captionof{figure}{\\Task Summary Page Wireframe}
-\end{center}
+\pagebreak
+% Second set of wireframes
+\begin{multicols}{2}
+    \centering
+    \textbf{Meeting logs page wireframe} \\
+    \vspace{0.2cm}
+    \includegraphics[width=0.9\linewidth]{requirementanalysis/MeetingLogs.png}
+    \captionof{figure}{Meeting Logs Page Wireframe}
+    \label{fig:meeting_logs}
 
+    \columnbreak
+
+    \centering
+    \textbf{Task list page wireframe} \\
+    \vspace{0.2cm}
+    \includegraphics[width=0.9\linewidth]{requirementanalysis/TaskList.png}
+    \captionof{figure}{Task List Page Wireframe}
+    \label{fig:task_list}
 \end{multicols}
 
 \pagebreak
 
-\subsection{User Interface Design}
-
-\vspace{5em}
-
-\begin{multicols}{2}
-
 \centering
-Meeting logs page wireframe
-
-\begin{center}
-\includegraphics[height=90mm]{requirementanalysis/MeetingLogs.png}
-\captionof{figure}{\\Meeting Logs Page Wireframe}
-\end{center}
-
-\centering
-Task list page wireframe
-
-\begin{center}
-\includegraphics[height=79mm]{requirementanalysis/TaskList.png}
-\captionof{figure}{\\Task List Page Wireframe}
-\end{center}
-
-\end{multicols}
-
-\pagebreak
-
-\subsection{User Interface Design}
-\vfill
-\centering
-Back logs page wireframe
-\begin{center}
-\includegraphics[height=90mm]{requirementanalysis/Backlogs.png}
-\captionof{figure}{\\Back Logs Page Wireframe}
-\end{center}
-\vfill
+\textbf{Back logs page wireframe} \\
+\vspace{0.2cm}
+\includegraphics[width=0.4\linewidth]{requirementanalysis/Backlogs.png}
+\captionof{figure}{Back Logs Page Wireframe}
+\label{fig:backlogs}

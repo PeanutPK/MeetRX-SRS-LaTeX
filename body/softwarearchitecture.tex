@@ -4,25 +4,42 @@
 \raggedright
 \section{System Architecture Overview}
 \label{section:architecture-overview}
-<TIP: Provide a high-level description of your system's structure.
-Include either a Domain Model (to describe core business concepts
-and their relationships)
-or a Design Class Diagram (to describe how your code is organized
-into classes and packages),
-whichever best communicates your design.
-Accompany your diagram with a short paragraph explaining the key
-components and how they interact. />
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{softwarearchitecture/SystemArchitecture.png}
+    \caption{System Architecture}
+\end{figure}
+
+The system begins with user input in the form of audio or queries.
+Audio streams are processed by the transcription module to convert speech into text.
+The transcribed text is passed to the drift detection module, where an NLP-based model and an LLM evaluator identify topic deviations and trigger alerts when necessary.
+For user queries, the agentic AI component retrieves stored data and external resources (e.g., GitHub) to generate responses.
+At the end of the user's meeting, the system outputs the meeting's summaries, and action items brought up in the meeting for further task managements.
 
 \raggedright
 \section{Software Design}
 \label{section:software-design}
-<TIP: Describe the runtime behavior of your system.
-Include a Sequence Diagram for your most important use cases.
-Focus on scenarios with non-trivial interactions between components.
-If your project involves a novel algorithm,
-describe it here and explain why you designed it this way. />
 
-\pagebreak
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth]{softwarearchitecture/MeetingSequenceDiagram.png}
+    \caption{Sequence Diagram of Topic drift detection and summarization}
+\end{figure}
+{
+    \setlength{\parindent}{2em} The system operates as a real-time pipeline that processes the user meeting's audio input and supports task management and query answering.
+
+    When the user add our AI into the meeting, it records the meeting's audio and sends it to the transcription module,
+    which converts speech into text segments using Whisper.
+    The texts are then passed to the topic drift detection module every few minutes, where an NLP-based model combined with an LLM Evaluator analyzes the content to identify any deviations from the main topic and notify the user if a drift is detected.
+
+    After the meeting, the transcript is passed to the summarization module, which generates a concise summary of the meeting content.
+    Both the transcript and the summarized information are then sent to the agentic AI module, which handles task management and question answering.
+    This module can also retrieve additional context from external sources such as GitHub.
+    When a user submits a query, it is processed by the agentic AI, which generates a response using both stored data and external information.
+    Transcripts and summaries are stored in the database for later retrieval.
+
+    Finally, all outputs, including summaries, alerts, and query responses, are delivered to the user through the output interface in near real-time.
+}
 
 \raggedright
 \section{AI and Data Design}
@@ -31,12 +48,11 @@ describe it here and explain why you designed it this way. />
 \subsection{Data Sources and Collection}
 {
     \setlength{\parindent}{2em}
-    This project will utilize publicly available datasets to train and evaluate the AI components. 
-    \vspace{1em}
-    \\The primary data sources include:
+    This project will utilize publicly available datasets to train and evaluate the AI components including topic drift detection, speech-to-text transcription, question answering, text summarization, and task management. For each topic, we will use the dataset below:
     \begin{itemize}
-        \item \textbf{AMI Meeting Corpus}: Provides over 170 annotated meeting recordings along with transcripts, allowing the system to learn realistic meeting conversations and structures. 
+        \item \textbf{AMI Meeting Corpus}: Provides over 170 annotated meeting recordings along with transcripts, allowing the system to learn realistic meeting conversations and structures.
         \item \textbf{TIAGE dataset}: Used for topic drift detection, containing approximately 500 text samples focused on conversational topic classification.
+        \item \textbf{TaskAllocator}: The dataset contains more than 600 entries of project names, tasks, descriptions, and roles, which we will use to train our task management model to assign tasks to the user's team.
     \end{itemize}
 }
 
@@ -44,26 +60,38 @@ describe it here and explain why you designed it this way. />
 {
     \setlength{\parindent}{2em}
     The system adopts a modular approach by integrating multiple AI models, each designed for a specific task within the meeting workflow.
-    \\[1em]For speech-to-text transcription, \textbf{WhisperX} is used due to its strong performance in real-time transcription and multilingual support. 
-    The model will convert spoken audio into text, which serves as the foundation for further processing.
-    \\[1em]For question answering, a \textbf{BERT-based model (BertQA)} is used. 
-    This model is effective at extracting precise answers from contextual data. 
-    It is integrated into an agentic system that retrieves relevant information from past meetings and generates context-aware responses.
-    \\[1em]For text summarization, the system will utilize \textbf{BART} for its strong performance in generating concise and meaningful summaries from long meeting transcripts.
-    \\[1em]For task management, the \textbf{LLaMA 3} will be used to identify and extract actionable tasks from meeting content. This model can detect responsibilities, deadlines, and action items from natural language.
-    \\[1em]All models are integrated into a pipeline where outputs from one component are used as inputs for others. 
-    For example, transcription feeds into summarization and question answering. 
+    \begin{itemize}
+        \item \textbf{Drift Detection}: A combination of an NLP-based model and an LLM Evaluator is used. The NLP-based model is trained on the TIAGE dataset to classify whether the conversation has deviated from the main topic. The LLM Evaluator provides additional context-aware analysis to improve detection accuracy and reduce false positives which we will be using \textbf{LLaMA 3.1 8B} or equivalent models.
+        \item \textbf{Speech-to-text Transcription}: A \textbf{Whisper} is used due to its strong performance in real-time transcription and multilingual support.
+              The model will convert spoken audio into text, which serves as the foundation for further processing.
+        \item \textbf{Question Answering}: A \textbf{BERT-based model (BertQA)} is used,
+              because this model is effective at extracting precise answers from contextual data.
+              It is integrated into an agentic system that retrieves relevant information from past meetings and generates context-aware responses.
+        \item \textbf{Text Summarization}: The system will utilize \textbf{BART} for its strong performance in generating concise and meaningful summaries from long meeting transcripts.
+        \item \textbf{Task Management}: The \textbf{LLaMA 3.1 8B} or equivalent models will be used to identify and extract actionable tasks from meeting content. This model can detect responsibilities, deadlines, and action items from natural language.
+    \end{itemize}
+    All models are integrated into a pipeline where outputs from one component are used as inputs for others.
+    For example, transcription feeds into summarization and question answering.
     Prompt engineering techniques are applied when interacting with large language models to ensure consistent and relevant outputs.
     The selected models are chosen based on their effectiveness in natural language processing tasks and their ability to handle real-time conversational data.
 }
+
+\pagebreak
+
 \subsection{Evaluation}
 {
     \setlength{\parindent}{2em}
     The performance of the AI components is evaluated using task-specific metrics.
-    \\[1em]For topic drift detection, \textbf{BERTScore} is used to measure the semantic similarity between sentences, allowing the system to detect when a conversation deviates from the main topic.
-    \\[1em]For speech-to-text transcription, \textbf{Word Error Rate (WER)} is used to evaluate the accuracy of the generated transcript compared to the ground truth.
-    \\[1em]For the question answering component, evaluation includes \textbf{task success rate, correctness, and human evaluation}. These metrics assess how well the system retrieves and presents relevant information.
-    \\[1em]For text summarization, \textbf{ROUGE} metrics are used, including \textbf{ROUGE-N} and \textbf{ROUGE-L}. These measure the overlap between generated summaries and reference summaries in terms of precision, recall, and sequence similarity.
-    \\[1em]For task management, standard classification metrics such as \textbf{accuracy, precision, recall, and F1-score} are used. These are calculated using K-fold cross-validation to ensure the model performs consistently across different data splits.
-    \\[1em]Together, these evaluation metrics provide a comprehensive assessment of the system's performance across all AI components.
+    \\[1em]
+    \textbf{Topic Drift Detection:} Precision, Recall, and F1-score are used to evaluate the model's ability to correctly identify whether a conversation has deviated from the main topic. Precision measures the correctness of detected drifts, while recall evaluates how many actual drifts are successfully identified. The F1-score provides a balanced measure of both.
+    \\[1em]
+    \textbf{Speech-to-Text Transcription:} Word Error Rate (WER) is used to assess transcription accuracy by comparing the generated transcript with the ground truth. It reflects the proportion of errors in the transcription output.
+    \\[1em]
+    \textbf{Question Answering:} Evaluation focuses on task success rate, the number of steps required to reach a solution, and human evaluation. These metrics assess whether the system effectively achieves the user's goal and provides useful responses.
+    \\[1em]
+    \textbf{Text Summarization:} ROUGE metrics, including ROUGE-N and ROUGE-L, are used to evaluate the quality of generated summaries. These metrics measure the overlap and similarity between the generated summary and reference summaries.
+    \\[1em]
+    \textbf{Task Management:} Standard classification metrics such as accuracy, precision, recall, and F1-score are used to evaluate the system's ability to correctly extract and manage tasks. These metrics ensure consistent performance across different scenarios.
+    \\[1em]
+    Together, these evaluation metrics provide a comprehensive assessment of the system's performance across all AI components.
 }

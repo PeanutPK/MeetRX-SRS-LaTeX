@@ -5,7 +5,7 @@
 % Add third-party packages
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{mathptmx}  % Times New Roman font package
+\usepackage{mathptmx} % Times New Roman font package
 \usepackage[hidelinks]{hyperref}  % Allows hyperlink text in built document
 \usepackage{url}  % Allows url line breaks
 \usepackage{microtype}  % For hyphen-letterspacing configuration
@@ -17,6 +17,9 @@
 \usepackage{multicol}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
 
 \graphicspath{{./assets}}
 
@@ -32,7 +35,7 @@
 \def \srsAuthorThree{Nunthapop Nganiam}
 \def \srsAcademicYear{2026}
 
-\def \srsAdvisorName{Project Advisor's Name}
+\def \srsAdvisorName{Asst. Prof. Dr. Hutchatai Chanlekha}
 \def \srsCoAdvisorName{}
 %% -----------------------------------
 
@@ -81,6 +84,6 @@
     \bibliographystyle{IEEEtran}
     \bibliography{bibliography}  % change the inside to your bibliography file name
 
-    \include{body/appendices}
+    % \include{body/appendices}
 
 \end{document}

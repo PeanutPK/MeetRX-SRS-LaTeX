@@ -3,12 +3,21 @@
 
 \section{Competitor Analysis}
 \label{section:competitor-analysis}
-
-\begin{figure}[h]
+\begin{table}[h]
     \centering
-    \includegraphics[width=1\textwidth]{relatedworks/comparetable.png}
     \caption{Competitive Analysis Table}
-\end{figure}
+    \label{tab:compare_table}
+    \vspace{0.3cm}
+    \renewcommand{\arraystretch}{1.5} % Adds vertical padding for a cleaner look
+    \begin{tabularx}{\textwidth}{|l|*4{>{\centering\arraybackslash}X|}}
+        \hline
+        \textbf{Name}         & \textbf{Meeting Summary} & \textbf{Q\&A Chatbot} & \textbf{Task Assignment} & \textbf{Topic Drift Detection} \\ \hline
+        \textbf{Otter AI}     & \cmark                   & \cmark            & \xmark                        & \xmark                              \\ \hline
+        \textbf{Fireflies AI} & \cmark               & \cmark            & \cmark               & \xmark                              \\ \hline
+        \textbf{Spinach AI}   & \cmark               & \cmark            & \cmark               & \xmark                              \\ \hline
+        \textbf{MeetRX}       & \cmark               & \cmark            & \cmark               & \cmark                     \\ \hline
+    \end{tabularx}
+\end{table}
 
 \textbf{Otter AI} provides real-time transcription, automatic meeting summaries, and a Q\&A interface
 for querying transcripts. However, it has no task assignment capability and no mechanism for detecting
@@ -18,7 +27,7 @@ or alerting users to topic drift.
 assignment feature with tools integration. Topic drift detection is absent.
 
 \textbf{Spinach AI} is targeted at agile teams and offers summaries, Q\&A, and task assignment with
- tool integration. Like the others, it provides no real-time topic drift detection.
+tool integration. Like the others, it provides no real-time topic drift detection.
 
 \textbf{MeetRX} is the only solution in this comparison that addresses all four dimensions, and is the
 only product that actively detects and alerts participants to topic drift during a live meeting.
@@ -31,7 +40,7 @@ This section reviews academic research and technical reports relevant to the des
 \subsection{Real-Time Speech Analysis}
 \label{subsection:real-time-speech-analysis}
 
-Real-time speech transcription is a fundamental component of the system, enabling the automatic conversion of meeting audio into text. The study in\cite{transcription_voip_11159004} explores the integration of NLP with VoIP systems to achieve low-latency transcription. 
+Real-time speech transcription is a fundamental component of the system, enabling the automatic conversion of meeting audio into text. The study in\cite{transcription_voip_11159004} explores the integration of NLP with VoIP systems to achieve low-latency transcription.
 
 Another work\cite{rnnt_transcription_10257856} propose to use Recurrent Neural Network Transducers models to improve accuracy and speed of transcription in noisy environments, which is crucial for real-world meeting scenarios.
 
@@ -47,7 +56,7 @@ Evaluating summarization quality can be done using ROUGE\cite{rouge_eval} and BE
 \subsection{Task Allocation}
 \label{subsection:task-allocation}
 
-Task allocation is a critical component of team productivity in agile environments. The study in\cite{task_allocation_ml} explores the use of machine learning algorithms to assign tasks in distributed software development teams based on historical performance and expertise. 
+Task allocation is a critical component of team productivity in agile environments. The study in\cite{task_allocation_ml} explores the use of machine learning algorithms to assign tasks in distributed software development teams based on historical performance and expertise.
 
 Similarly, the TaskAllocator framework\cite{task_allocator} proposes a recommendation-based approach that assigns tasks according to roles and past project data.
 
@@ -58,7 +67,7 @@ Inspired by these works, MeetRX decides to implement a task assignment feature t
 \subsection{Topic Drift Detection}
 \label{subsection:topic-drift-detection}
 
-Topic drift detection is the core feature for MeetRX, enabling real-time alerts when a meeting conversation drifts away from the agenda. The TIAGE framework\cite{tiage} introduces a methods for detecting changes in dialog using topic aware generation (GEN Encoder).
+Topic drift detection is the core feature for MeetRX, enabling real-time alerts when a meeting conversation drifts away from the agenda. The TIAGE framework\cite{tiage} introduces a methods for detecting changes in dialog using topic aware generation (GEN Encoder) where the GEN Encoder uses cosine similarity.
 
 Another study\cite{topic_shift} focuses on detecting topic shifts in mixed-initiative conversations, highlighting the importance of context in conversational AI systems.
 
