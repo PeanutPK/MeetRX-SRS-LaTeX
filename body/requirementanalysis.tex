@@ -54,7 +54,7 @@
 
 \section{Use Case Diagrams}
 \label{section:use-case-diagrams}
-The use case diagram below shows that the system has two main actors: Meeting Participant and Project Manager/Leader or Scrum Master. The Meeting Participant can receive topic drift alerts, query past meetings, and view meeting summaries. The Project Manager/Leader or Scrum Master can start meetings, view meeting summaries, and manage tasks. Both actors interact with the system to ensure that meetings are productive and that important information is easily accessible.
+The use case diagram below shows that the system has two main actors: Meeting Participant and Project Manager/Leader or Scrum Master. The Meeting Participant can receive topic drift alerts, query past meetings, and view meeting summaries. The Project Manager/Leader or Scrum Master can start meetings using MeetRX bot, view meeting summaries, and manage tasks. Both actors interact with the system to ensure that meetings are productive and that important information is easily accessible.
 \begin{figure}[h]
     \centering
     \includegraphics[height=130mm]{requirementanalysis/Usecase-Diagram.png}
@@ -83,7 +83,7 @@ The use case diagram below shows that the system has two main actors: Meeting Pa
 
 \vspace{1em}
 
-\subsection*{UC-02: Receive Topic Drift Alert}
+\subsection*{UC-02: Receive Topic Drift Alert Low Confidence}
 
 \begin{tabular}{|l|p{10cm}|}
     \hline
@@ -91,9 +91,31 @@ The use case diagram below shows that the system has two main actors: Meeting Pa
     \hline
     \textbf{Precondition}     & A meeting session is active.                                          \\
     \hline
-    \textbf{Main Flow}        & 1. NLP module computes drift score for each utterance. \newline
-    2. If score exceeds threshold, LLM re-evaluation is triggered. \newline
-    3. System displays a drift alert banner visible to all participants. \newline
+    \textbf{Main Flow}        & 1. NLP module computes confidence score for each utterance. \newline
+    2. If score exceeds threshold for low confidence score but not high confidence score, LLM re-evaluation is triggered. \newline
+    3. If LLM confirms drift, the system logs the event and generates an alert. \newline
+    4. System displays a drift alert banner with sound visible to all participants. \newline
+    5. Participant acknowledges the alert and guides conversation back to agenda.                     \\
+    \hline
+    \textbf{Alternative Flow} & If the participant dismisses the alert, the system logs the dismissal
+    and resumes monitoring.                                                                           \\
+    \hline
+    \textbf{Postcondition}    & Alert is logged; meeting continues.                                   \\
+    \hline
+\end{tabular}
+
+
+\subsection*{UC-03: Receive Topic Drift Alert High Confidence}
+
+\begin{tabular}{|l|p{10cm}|}
+    \hline
+    \textbf{Actor}            & Meeting Participant (all)                                             \\
+    \hline
+    \textbf{Precondition}     & A meeting session is active.                                          \\
+    \hline
+    \textbf{Main Flow}        & 1. NLP module computes confidence score for each utterance. \newline
+    2. If score exceeds threshold for high confidence score, the system logs the event and generates an alert. \newline
+    3. System displays a drift alert banner with sound visible to all participants. \newline
     4. Participant acknowledges the alert and guides conversation back to agenda.                     \\
     \hline
     \textbf{Alternative Flow} & If the participant dismisses the alert, the system logs the dismissal
@@ -104,7 +126,7 @@ The use case diagram below shows that the system has two main actors: Meeting Pa
 \end{tabular}
 
 
-\subsection*{UC-03: Query Past Meetings}
+\subsection*{UC-04: Query Past Meetings}
 \begin{tabular}{|l|p{10cm}|}
     \hline
     \textbf{Actor}         & Meeting Participant                                                 \\

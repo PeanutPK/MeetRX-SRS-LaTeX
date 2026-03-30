@@ -1,9 +1,4 @@
-@misc{overleaf:learnlatex,
-  organization = {Overleaf},
-  howpublished = {\url{https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes}},
-  title        = {Learn LaTeX in 30 Minutes}
-}
-
+% --- Speech & Transcription ---
 @inproceedings{transcription_voip_11159004,
   author    = {Rajchandar, K. and Hegde, Prajwal N. and Dwivedi, Upendra and Chouhan, Kuldeep and Sidhu, Kawerinder Singh and Velagala, Rambabu},
   title     = {Natural Language Processing for Real-Time Transcription in VoIP Systems},
@@ -22,8 +17,6 @@
   doi       = {10.1109/ICIPCA59209.2023.10257856}
 }
 
-
-
 @misc{wer_eval,
   title  = {Calculate Word Error Rate (WER) in Python},
   author = {The Python Code},
@@ -31,46 +24,21 @@
   url    = {https://thepythoncode.com/article/calculate-word-error-rate-in-python}
 }
 
-@article{task_allocation_ml,
-  title   = {Utilizing Machine Learning Algorithms for Task Allocation in Distributed Agile Software Development},
-  journal = {PMC},
-  year    = {2024},
-  url     = {https://pmc.ncbi.nlm.nih.gov/articles/PMC11567032/}
-}
-
-@article{task_allocator,
-  title   = {TaskAllocator: A Recommendation Approach for Role-based Tasks Allocation in Agile Software Development},
-  journal = {arXiv},
-  year    = {2021},
-  url     = {https://arxiv.org/pdf/2103.02330}
-}
-
-@misc{task_allocator_dataset,
-  title  = {TaskAllocator Dataset},
-  author = {JKU ISSE},
-  year   = {2021},
-  url    = {https://github.com/jku-isse/TaskAllocator/blob/master/Dataset/125501.csv}
-}
-
-@misc{mised_dataset,
-  title  = {MISeD Dataset},
-  author = {Google Research},
-  year   = {2024},
-  url    = {https://github.com/google-research-datasets/MISeD}
-}
-
+% --- Summarization & Datasets ---
 @article{mised_paper,
   title   = {Efficient Data Generation for Source-grounded Information-seeking Dialogs: A Use Case for Meeting Transcripts},
-  journal = {arXiv},
+  journal = {arXiv preprint arXiv:2405.01121},
   year    = {2024},
-  url     = {https://arxiv.org/pdf/2405.01121}
+  author  = {Lotem Golany and Filippo Galgani and Maya Mamo and Nimrod Parasol and Omer Vandsburger and Nadav Bar and Ido Dagan}
 }
 
-@misc{qmsum_dataset,
-  title  = {QMSum Dataset},
-  author = {Yale LILY},
-  year   = {2021},
-  url    = {https://github.com/Yale-LILY/QMSum}
+@inproceedings{qmsum_dataset,
+  title     = {QMSum: A New Benchmark for Query-based Multi-domain Meeting Summarization},
+  author    = {Zhong, Haoran and Xiao, Chaocai and Tang, Liqiang and Lei, Zhi and Yang, Ting and Kwok, James T},
+  booktitle = {Proceedings of the 2021 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+  pages     = {349--365},
+  year      = {2021},
+  organization = {ACL}
 }
 
 @misc{rouge_eval,
@@ -87,18 +55,54 @@
   url    = {https://medium.com/@abonia/bertscore-explained-in-5-minutes}
 }
 
-@article{tiage,
-  title   = {TIAGE: Topic-aware Dialogue Generation},
-  journal = {arXiv},
-  year    = {2021},
-  url     = {https://arxiv.org/pdf/2109.04562}
+% --- Task Allocation ---
+@article{task_allocation_ml,
+  title   = {Utilizing Machine Learning Algorithms for Task Allocation in Distributed Agile Software Development},
+  journal = {PMC},
+  year    = {2024},
+  author  = {Dimah Al-Fraihat and Yousef Sharrab and Abdel-Rahman Al-Ghuwairi and Hamza Alzabut and Malik Beshara and Abdulmohsen Algarni},
+  url     = {https://pmc.ncbi.nlm.nih.gov/articles/PMC11567032/}
 }
 
-@article{topic_shift,
-  title   = {Topic Shift Detection for Mixed Initiative Response},
-  journal = {ACL Anthology},
+@article{task_allocator,
+  title   = {TaskAllocator: A Recommendation Approach for Role-based Tasks Allocation in Agile Software Development},
+  journal = {arXiv preprint arXiv:2103.02330},
   year    = {2021},
-  url     = {https://aclanthology.org/2021.sigdial-1.17.pdf}
+  author  = {Saad Shafiq and Atif Mashkoor and Christoph Mayr-Dorn and Alexander Egyed}
+}
+
+% --- Topic Drift & NLP Algorithms ---
+@article{hearst1997texttiling,
+  title     = {TextTiling: Segmenting Text into Multi-paragraph Subtopic Passages},
+  author    = {Hearst, Marti A},
+  journal   = {Computational Linguistics},
+  volume    = {23},
+  number    = {4},
+  pages     = {33--64},
+  year      = {1997}
+}
+
+@article{tiage,
+  title   = {TIAGE: Topic-aware Dialogue Generation},
+  journal = {arXiv preprint arXiv:2109.04562},
+  year    = {2021},
+  author  = {Huiyuan Xie and Zhenghao Liu and Chenyan Xiong and Zhiyuan Liu and Ann Copestake}
+}
+
+@inproceedings{topic_shift,
+  title   = {Topic Shift Detection for Mixed Initiative Response},
+  booktitle = {Proceedings of the 22nd Annual Meeting of the Special Interest Group on Discourse and Dialogue},
+  year    = {2021},
+  author  = {Rachna Konigari and Saurabh Chand and Vijay Vardhan Alluri and Manish Shrivastava},
+  pages   = {189--195}
+}
+
+% --- Agentic AI & Cascades ---
+@article{frugalgpt,
+  title   = {FrugalGPT: How to Use Large Language Models While Reducing Cost and Latency},
+  author  = {Chen, Lingjiao and Zaharia, Matei and Zou, James},
+  journal = {arXiv preprint arXiv:2305.05176},
+  year    = {2023}
 }
 
 @misc{code_analysis_agent,

@@ -12,10 +12,10 @@
     \begin{tabularx}{\textwidth}{|l|*4{>{\centering\arraybackslash}X|}}
         \hline
         \textbf{Name}         & \textbf{Meeting Summary} & \textbf{Q\&A Chatbot} & \textbf{Task Assignment} & \textbf{Topic Drift Detection} \\ \hline
-        \textbf{Otter AI}     & \cmark                   & \cmark            & \xmark                        & \xmark                              \\ \hline
-        \textbf{Fireflies AI} & \cmark               & \cmark            & \cmark               & \xmark                              \\ \hline
-        \textbf{Spinach AI}   & \cmark               & \cmark            & \cmark               & \xmark                              \\ \hline
-        \textbf{MeetRX}       & \cmark               & \cmark            & \cmark               & \cmark                     \\ \hline
+        \textbf{Otter AI}     & \cmark                   & \cmark                & \xmark                   & \xmark                         \\ \hline
+        \textbf{Fireflies AI} & \cmark                   & \cmark                & \cmark                   & \xmark                         \\ \hline
+        \textbf{Spinach AI}   & \cmark                   & \cmark                & \cmark                   & \xmark                         \\ \hline
+        \textbf{MeetRX}       & \cmark                   & \cmark                & \cmark                   & \cmark                         \\ \hline
     \end{tabularx}
 \end{table}
 
@@ -67,13 +67,24 @@ Inspired by these works, MeetRX decides to implement a task assignment feature t
 \subsection{Topic Drift Detection}
 \label{subsection:topic-drift-detection}
 
-Topic drift detection is the core feature for MeetRX, enabling real-time alerts when a meeting conversation drifts away from the agenda. The TIAGE framework\cite{tiage} introduces a methods for detecting changes in dialog using topic aware generation (GEN Encoder) where the GEN Encoder uses cosine similarity.
+Topic drift detection is the core feature of MeetRX, enabling real-time alerts when a meeting conversation deviates from the agenda. The technical foundation for segmenting these shifts dates back to the \textbf{TextTiling Algorithm}\cite{hearst1997texttiling}, which utilizes a sliding window approach to compute lexical similarity between adjacent blocks of text to identify subtopic boundaries.
 
-Another study\cite{topic_shift} focuses on detecting topic shifts in mixed-initiative conversations, highlighting the importance of context in conversational AI systems.
+Modern implementations, such as the \textbf{TIAGE framework}\cite{tiage}, evolve this concept by using transformer-based embeddings and \textbf{cosine similarity} to detect changes in dialog. By comparing the vector representation of the live transcript window against the predefined agenda, systems can quantify `drift' more accurately than through keyword matching alone. Another study\cite{topic_shift} emphasizes that maintaining context is crucial in mixed-initiative conversations to prevent false positives in drift alerts.
 
-These studies suggest that semantic similarity and contextual embeddings are effective for identifying topic drift.
+Based on these findings, MeetRX implements a drift score computed via the embedding similarity between the current conversation window and the agenda. If the score falls below a specific similarity threshold, an alert is triggered.
 
-Based on these findings, MeetRX will computes drift score using the embedding similarity between the current conversation and the predefined agenda. If the score exceeds a certain threshold, an alert will be triggered to notify participants of potential topic drift.
+\subsection{Agentic AI and Two-Tier System Design}
+\label{subsection:agentic-ai-cascade}
+
+Agentic AI allow systems to perform complex tasks automatically by integrating LLMs with toolchains\cite{code_analysis_agent}. However, the high computational cost and latency of large-scale models pose challenges for real-time systems.
+
+To address this, MeetRX adopts a \textbf{Two-Tier Architecture} inspired by \textbf{LLM Cascade Systems} and \textbf{FrugalGPT}\cite{frugalgpt}. This approach utilizes a `cascade routing' strategy:
+\begin{enumerate}
+    \item \textbf{First Tier (NLP Based Model):} A lightweight model or traditional NLP similarity check (like the cosine similarity confidence check) processes the initial input to determine if a drift has occurred or if a query can be handled locally. If the confidence is high, the system responds immediately without invoking the LLM, thus saving time and computational resources.
+    \item \textbf{Second Tier (LLM):} Only when a the confidence is not high enough, or a specific `agentic' action is required, is the request pushed to a more powerful LLM.\@
+\end{enumerate}
+
+This cascading mechanism, as explored by Stanford researchers\cite{frugalgpt}, significantly reduces API costs and improves response latency while maintaining high accuracy. This ensures MeetRX would save computational resources more than using pure LLMs.
 
 \subsection{Agentic AI and Code Analysis}
 \label{subsection:agentic-ai-code-analysis}
