@@ -20,10 +20,66 @@
 
 \section{Schedule}
 \label{section:schedule}
-<TIP: Show the schedule of your project.
-Use a Gantt chart. The items should agree with features
-you listed in Chapter 1. />
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=1\textwidth]{softwaredevelopment/ScheduleGanttChart.png}
+  \caption{Project Schedule}
+\end{figure}
+{
+  \setlength{\parindent}{2em}
+  The project is organized into five phases spanning from March to the following March.
+  The schedule follows the Scrum methodology with two-week sprints, allowing for
+  iterative development and continuous feedback throughout the project lifecycle. \\[1em]
+
+  \textbf{Phase 1: Project Documentation and Initiation (March -- May)} focuses on
+  establishing the project foundation. The team begins by writing the Software
+  Requirements Specification (SRS), covering background, problem statement, solution
+  overview, stakeholder analysis, user stories, use case diagrams, domain model, system
+  architecture, and AI design. Concurrently, a development plan is produced that defines
+  the Gantt chart, team responsibilities, and sprint structure. UI wireframes and mockups
+  for the Meeting Dashboard, Summary View, and Q\&A Interface are designed in Figma and
+  validated against user stories. In parallel, a literature review is conducted covering
+  topic drift detection methods (cosine similarity, LDA, Sentence-BERT), meeting
+  summarisation models, and agentic AI frameworks (ReAct) to select the most appropriate
+  technologies for the system. \\[1em]
+
+  \textbf{Phase 2: AI Research and Development (April -- December)} is the core
+  development phase. Meeting Summarisation is implemented first using OpenAI GPT-4o with
+  a structured prompt designed to produce an overview paragraph, a key decisions list,
+  and an action items table. Speech-to-text transcription is then integrated using
+  WhisperX, with audio chunk streaming, speaker turn segmentation, and utterance storage
+  in PostgreSQL. The Topic Drift AI is built using Sentence-BERT embeddings and cosine
+  similarity scoring, with an LLM Evaluator fallback that calls GPT-4o to confirm drift
+  when the score exceeds a configurable threshold. The Q\&A AI and Task Management AI are
+  implemented as part of the Agentic AI module using a ReAct loop, integrating semantic
+  search over ChromaDB and structured queries against PostgreSQL for action item
+  retrieval and management. Finally, the GitHub Integration tool is added to the Agentic
+  AI, enabling codebase context retrieval via the GitHub API based on user queries.\\[1em]
+
+  \textbf{Phase 3: Meeting App Integration (December -- January)} focuses on connecting
+  the AI components to a real meeting environment. Voice recording is implemented in the
+  frontend using the Web Audio API, streaming audio chunks to the API Gateway via
+  WebSocket with handling for browser permissions and network reconnection. A speaker
+  diarization model is integrated to attribute each utterance to a specific participant,
+  producing speaker-labeled transcript segments for more accurate task assignment.
+  Finally, MeetRX is integrated with third-party meeting platforms such as Google Meet
+  and Microsoft Teams via their respective APIs or browser extensions.\\[1em]
+
+  \textbf{Phase 4: App Development (January -- March)} covers the full implementation of
+  the application. The database layer is set up, including the PostgreSQL schema for
+  users, sessions, transcripts, summaries, and action items, as well as ChromaDB for
+  vector storage and Redis for session caching and pub/sub event streaming. The React and
+  TypeScript frontend is implemented with the Meeting Dashboard, Summary View, and Q\&A
+  Interface. The FastAPI backend is completed with all REST and WebSocket endpoints,
+  service orchestration, authentication, and a CI/CD pipeline using GitHub Actions,
+  targeting a minimum of 80\% unit test coverage across all backend modules.\\[1em]
+
+  \textbf{Phase 5: Project Close (March)} concludes the project. The team finalises
+  the SRS document, prepares the presentation slides, records a system demonstration
+  video, and submits all deliverables. A final retrospective is conducted to document
+  known limitations and directions for future work. \\[1em]
+}
 % \section{Progress Tracking Report}
 % \label{section:progress-tracking-report}
 % <TIP: Show that you have been working on this project overtime.
