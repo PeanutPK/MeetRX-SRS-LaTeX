@@ -43,8 +43,8 @@
 \subsection{Scrum Master}
 \label{subsection:scrum-master-user-stories}
 
-\begin{enumerate}[leftmargin=80pt, itemsep=0.75em, parsep=0pt, topsep=8em]
-    \item As a \textbf{scrum master}, I want a real-time indicator that shows whether the current
+\begin{enumerate}[leftmargin=80pt]
+    \item As a \textbf{scrum master}, I want a active indicator that shows whether the current
           discussion is on-topic, so that I can redirect the team without interrupting the conversation flow.
     \item As a \textbf{scrum master}, I want all sprint summaries stored and indexed, so that
           I can reference them during retrospectives.
@@ -64,9 +64,10 @@ The use case diagram below shows that the system has two main actors: Meeting Pa
 
 \section{Use Case Model}
 \label{section:use-case-model}
+
 \subsection*{UC-01: Start Meeting}
 
-\begin{tabular}{|l|p{10cm}|}
+\begin{tabular}{|l|p{0.75\linewidth}|}
     \hline
     \textbf{Actor}         & Meeting Participant                                                  \\
     \hline
@@ -81,53 +82,30 @@ The use case diagram below shows that the system has two main actors: Meeting Pa
     \hline
 \end{tabular}
 
-\vspace{1em}
-
-\subsection*{UC-02: Receive Topic Drift Alert Low Confidence}
-
-\begin{tabular}{|l|p{10cm}|}
+\subsection*{UC-02: Receive Topic Drift Alert}
+\begin{tabular}{|l|p{0.75\linewidth}|}
     \hline
-    \textbf{Actor}            & Meeting Participant (all)                                             \\
+    \textbf{Actor}            & Meeting Participant                                             \\
     \hline
-    \textbf{Precondition}     & A meeting session is active.                                          \\
+    \textbf{Precondition}     & A meeting session is active.                                     \\
     \hline
-    \textbf{Main Flow}        & 1. NLP module computes confidence score for each utterance. \newline
-    2. If score exceeds threshold for low confidence score but not high confidence score, LLM re-evaluation is triggered. \newline
-    3. If LLM confirms drift, the system logs the event and generates an alert. \newline
-    4. System displays a drift alert banner with sound visible to all participants. \newline
-    5. Participant acknowledges the alert and guides conversation back to agenda.                     \\
+    \textbf{Main Flow}        & 1. System segments live transcription into 50-second time-windows with a 25-second stride. \newline
+    2. NLP module computes a confidence score for the current 50-second window. \newline
+    3. If high confidence, the window is flagged as "drifted." \newline
+    4. If low confidence, the window is evaluated by the LLM; if the LLM confirms, it is flagged. \newline
+    5. System tracks the total count of flagged windows over a rolling 550-second period. \newline
+    6. If the count of flagged windows exceeds the maximum threshold, the system logs the event. \newline
+    7. System displays a subtle visual drift alert (e.g., pulsing agenda item) visible to participants. \newline
+    8. Participant acknowledges the alert and guides conversation back to the agenda. \\
     \hline
-    \textbf{Alternative Flow} & If the participant dismisses the alert, the system logs the dismissal
-    and resumes monitoring.                                                                           \\
+    \textbf{Alternative Flow} & If the participant dismisses the alert, the system logs the dismissal, resets the flagged window counter, and resumes monitoring. \\
     \hline
-    \textbf{Postcondition}    & Alert is logged; meeting continues.                                   \\
-    \hline
-\end{tabular}
-
-
-\subsection*{UC-03: Receive Topic Drift Alert High Confidence}
-
-\begin{tabular}{|l|p{10cm}|}
-    \hline
-    \textbf{Actor}            & Meeting Participant (all)                                             \\
-    \hline
-    \textbf{Precondition}     & A meeting session is active.                                          \\
-    \hline
-    \textbf{Main Flow}        & 1. NLP module computes confidence score for each utterance. \newline
-    2. If score exceeds threshold for high confidence score, the system logs the event and generates an alert. \newline
-    3. System displays a drift alert banner with sound visible to all participants. \newline
-    4. Participant acknowledges the alert and guides conversation back to agenda.                     \\
-    \hline
-    \textbf{Alternative Flow} & If the participant dismisses the alert, the system logs the dismissal
-    and resumes monitoring.                                                                           \\
-    \hline
-    \textbf{Postcondition}    & Alert is logged; meeting continues.                                   \\
+    \textbf{Postcondition}    & Alert is logged; meeting continues. \\
     \hline
 \end{tabular}
 
-
-\subsection*{UC-04: Query Past Meetings}
-\begin{tabular}{|l|p{10cm}|}
+\subsection*{UC-03: Query Past Meetings}
+\begin{tabular}{|l|p{0.75\linewidth}|}
     \hline
     \textbf{Actor}         & Meeting Participant                                                 \\
     \hline
@@ -141,7 +119,6 @@ The use case diagram below shows that the system has two main actors: Meeting Pa
     \textbf{Postcondition} & Participant receives an answer grounded in historical meeting data. \\
     \hline
 \end{tabular}
-\vfill
 
 \pagebreak
 

@@ -19,7 +19,7 @@
     \end{tabularx}
 \end{table}
 
-\textbf{Otter AI} provides real-time transcription, automatic meeting summaries, and a Q\&A interface
+\textbf{Otter AI} provides transcription, automatic meeting summaries, and a Q\&A interface
 for querying transcripts. However, it has no task assignment capability and no mechanism for detecting
 or alerting users to topic drift.
 
@@ -27,7 +27,7 @@ or alerting users to topic drift.
 assignment feature with tools integration. Topic drift detection is absent.
 
 \textbf{Spinach AI} is targeted at agile teams and offers summaries, Q\&A, and task assignment with
-tool integration. Like the others, it provides no real-time topic drift detection.
+tool integration. Like the others, it provides no topic drift detection.
 
 \textbf{MeetRX} is the only solution in this comparison that addresses all four dimensions, and is the
 only product that actively detects and alerts participants to topic drift during a live meeting.
@@ -35,12 +35,12 @@ only product that actively detects and alerts participants to topic drift during
 \section{Literature Review}
 \label{section:literature-review}
 
-This section reviews academic research and technical reports relevant to the design and implementation of MeetRX, focusing on four key areas: real-time transcription, meeting summarization, task allocation, topic drift detection, and agentic AI systems. These works provide the technical foundation for the design of MeetRX and how it aids in selecting appropriate metrics for evaluating the system's performance.
+This section reviews academic research and technical reports relevant to the design and implementation of MeetRX, focusing on four key areas: transcription, meeting summarization, task allocation, topic drift detection, and agentic AI systems. These works provide the technical foundation for the design of MeetRX and how it aids in selecting appropriate metrics for evaluating the system's performance.
 
-\subsection{Real-Time Speech Analysis}
-\label{subsection:real-time-speech-analysis}
+\subsection{Speech Analysis}
+\label{subsection:speech-analysis}
 
-Real-time speech transcription is a fundamental component of the system, enabling the automatic conversion of meeting audio into text. The study in\cite{transcription_voip_11159004} explores the integration of NLP with VoIP systems to achieve low-latency transcription.
+Speech analysis is a fundamental component of the system, enabling the automatic conversion of meeting audio into text. The study in\cite{transcription_voip_11159004} explores the integration of NLP with VoIP systems to achieve low-latency transcription.
 
 Another work\cite{rnnt_transcription_10257856} propose to use Recurrent Neural Network Transducers models to improve accuracy and speed of transcription in noisy environments, which is crucial for real-world meeting scenarios.
 
@@ -67,20 +67,20 @@ Inspired by these works, MeetRX decides to implement a task assignment feature t
 \subsection{Topic Drift Detection}
 \label{subsection:topic-drift-detection}
 
-Topic drift detection is the core feature of MeetRX, enabling real-time alerts when a meeting conversation deviates from the agenda. The technical foundation for segmenting these shifts dates back to the \textbf{TextTiling Algorithm}\cite{hearst1997texttiling}, which utilizes a sliding window approach to compute lexical similarity between adjacent blocks of text to identify subtopic boundaries.
+Topic drift detection is the core feature of MeetRX, enabling active alerts when a meeting conversation deviates from the agenda. Understanding the temporal nature of human attention is critical for establishing when this drift typically occurs and defining the system's detection windows. Foundational studies on attention spans note that active engagement reliably drops after 15 to 20 minutes without a shift in stimulus\cite{bradbury2016attention}. Furthermore, industry research by the Microsoft Human Factors Lab\cite{mircrosoft2021brain} demonstrated that cognitive fatigue begins to accumulate significantly after 30 to 40 minutes of sustained meeting time, naturally increasing the likelihood of conversational tangents. When a meeting does drift, research by Mark et al.\cite{mark2008cost} highlights that it takes an average of 23 minutes for a professional to fully regain deep cognitive focus. Consequently, MeetRX utilizes a 550-second (approximately 9-minute) overarching rolling window to catch the early onset of cognitive fatigue before it spirals into a costly distraction.
 
-Modern implementations, such as the \textbf{TIAGE framework}\cite{tiage}, evolve this concept by using transformer-based embeddings and \textbf{cosine similarity} to detect changes in dialog. By comparing the vector representation of the live transcript window against the predefined agenda, systems can quantify `drift' more accurately than through keyword matching alone. Another study\cite{topic_shift} emphasizes that maintaining context is crucial in mixed-initiative conversations to prevent false positives in drift alerts.
+The technical foundation for segmenting these shifts dates back to the \textbf{TextTiling Algorithm}\cite{hearst1997texttiling}, which utilizes a sliding window approach to compute lexical similarity between adjacent blocks of text to identify subtopic boundaries. Modern implementations, such as the \textbf{TIAGE framework}\cite{tiage}, evolve this concept by using transformer-based embeddings and \textbf{cosine similarity} to detect changes in dialog. By comparing the vector representation of the live transcript window against the predefined agenda, systems can quantify `drift' more accurately than through keyword matching alone.
 
-Based on these findings, MeetRX implements a drift score computed via the embedding similarity between the current conversation window and the agenda. If the score falls below a specific similarity threshold, an alert is triggered.
+Another study\cite{topic_shift} emphasizes that maintaining context is crucial in mixed-initiative conversations to prevent false positives in drift alerts. Based on these combined cognitive and algorithmic findings, MeetRX implements a sliding window architecture utilizing a 50-second base segment advancing with a 25-second stride. The NLP model continuously computes a drift confidence score for each 50-second block against the predefined agenda. High-confidence drifts are flagged immediately, while low-confidence blocks are forwarded to an LLM for secondary validation. To prevent false alarms triggered by acceptable social tangents, the system aggregates these flagged micro-segments into the overarching 550-second rolling context. If the volume of flagged windows across this 9-minute span exceeds a configurable threshold, the system issues a subtle alert to realign the meeting.
 
 \subsection{Agentic AI and Two-Tier System Design}
 \label{subsection:agentic-ai-cascade}
 
-Agentic AI allow systems to perform complex tasks automatically by integrating LLMs with toolchains\cite{code_analysis_agent}. However, the high computational cost and latency of large-scale models pose challenges for real-time systems.
+Agentic AI allow systems to perform complex tasks automatically by integrating LLMs with toolchains\cite{code_analysis_agent}. However, the high computational cost and latency of large-scale models pose challenges for live-interactive systems.
 
 To address this, MeetRX adopts a \textbf{Two-Tier Architecture} inspired by \textbf{LLM Cascade Systems} and \textbf{FrugalGPT}\cite{frugalgpt}. This approach utilizes a `cascade routing' strategy:
 \begin{enumerate}
-    \item \textbf{First Tier (NLP Based Model):} A lightweight model or traditional NLP similarity check (like the cosine similarity confidence check) processes the initial input to determine if a drift has occurred or if a query can be handled locally. If the confidence is high, the system responds immediately without invoking the LLM, thus saving time and computational resources.
+    \item \textbf{First Tier (NLP Based Model):} A lightweight model or traditional NLP similarity check (like the cosine similarity confidence check) processes the initial input to determine if a drift has occurred or if a query can be handled locally. If the confidence is high, the system responds directly without invoking the LLM, thus saving time and computational resources.
     \item \textbf{Second Tier (LLM):} Only when a the confidence is not high enough, or a specific `agentic' action is required, is the request pushed to a more powerful LLM.\@
 \end{enumerate}
 
@@ -100,4 +100,4 @@ Based on these findings, MeetRX integrates an agentic AI component that allows u
 \section{Summary}
 \label{section:summary}
 
-This chapter has reviewed the competitive landscape of meeting productivity tools and the relevant academic research that informs the design of MeetRX. The analysis highlights the unique features of MeetRX, particularly its real-time topic drift detection, which sets it apart from existing solutions. The literature review provides a solid foundation for the technical implementation of MeetRX and guides the selection of appropriate evaluation metrics for assessing its performance in subsequent chapters.
+This chapter has reviewed the competitive landscape of meeting productivity tools and the relevant academic research that informs the design of MeetRX. The analysis highlights the unique features of MeetRX, particularly its active topic drift detection, which sets it apart from existing solutions. The literature review provides a solid foundation for the technical implementation of MeetRX and guides the selection of appropriate evaluation metrics for assessing its performance in subsequent chapters.

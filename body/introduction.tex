@@ -46,8 +46,8 @@ MeetRX addresses the problems above through three integrated AI subsystems:
 \begin{enumerate}
     \item \textbf{Topic Drift Detection AI (Main Feature)}: Continuously analyses the live conversation
           using natural language processing techniques to assign a drift score to recent utterances. When the
-          score exceeds a configurable threshold, a large language model re-evaluation is triggered and a
-          real-time alert is surfaced to meeting participants, prompting them to return to the agenda.
+          score exceeds a configurable threshold and the confidence is low, a large language model re-evaluation is triggered and a
+          alert is surfaced to meeting participants, prompting them to return to the agenda. The alert will be designed to be able to configure by users.
 
     \item \textbf{Summarisation AI}: Automatically transcribes meeting audio using OpenAI Whisper
           and generates a structured summary so that no human minute-taker is required. All participants can
@@ -62,7 +62,7 @@ MeetRX addresses the problems above through three integrated AI subsystems:
 \label{subsection:features}
 
 \begin{enumerate}[leftmargin=80pt]
-    \item \textbf{Real-time Topic Drift Detection}: Monitors conversation flow and raises an alert when
+    \item \textbf{Active Topic Drift Detection}: Monitors conversation flow and raises an alert when
           discussion deviates from the stated agenda topic.
     \item \textbf{Automatic Meeting Summarisation}: Produces a concise, structured summary at the end of
           every session without requiring manual note-taking.
@@ -75,7 +75,7 @@ MeetRX addresses the problems above through three integrated AI subsystems:
 \section{Target User}
 \label{section:target-user}
 
-MeetRX is designed for three primary user groups:
+MeetRX is designed for three primary user groups that often struggle with meeting or required meetings as part of their work:
 
 \begin{itemize}
     \item \textbf{Students}: Particularly those conducting group project meetings who need help keeping
@@ -96,6 +96,7 @@ MeetRX is designed for three primary user groups:
           intended meeting topic or agenda item.
     \item[Drift Score] A numerical value computed by the NLP pipeline that quantifies how far the current
           utterance has deviated from the baseline topic embedding.
+    \item[Time-Window Segment] A block of transcribed utterances aggregated over a specific duration (e.g., 60 seconds) used to evaluate conversational context, reducing the noise inherent in analyzing single, isolated sentences.
     \item[Agenda] A predefined list of topics that a meeting is intended to cover.
     \item[Utterance] A single spoken turn or message produced by one participant during a meeting.
     \item[Summarisation] The process of condensing a meeting transcript into a shorter document that

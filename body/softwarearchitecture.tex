@@ -12,7 +12,6 @@
 
 The system begins with user input in the form of audio or queries.
 Audio streams are processed by the transcription module to convert speech into text.
-The transcribed text is passed to the drift detection module, where an NLP-based model and an LLM evaluator identify topic deviations and trigger alerts when necessary.
 For user queries, the agentic AI component retrieves stored data and external resources (e.g., GitHub) to generate responses.
 At the end of the user's meeting, the system outputs the meeting's summaries, and action items brought up in the meeting for further task managements.
 
@@ -26,7 +25,7 @@ At the end of the user's meeting, the system outputs the meeting's summaries, an
     \caption{Sequence Diagram of Topic drift detection and summarization}
 \end{figure}
 {
-    \setlength{\parindent}{2em} The system operates as a real-time pipeline that processes the user meeting's audio input and supports task management and query answering.
+    \setlength{\parindent}{2em} The system operates as a continuous pipeline that processes the user meeting's audio input and supports task management and query answering.
 
     When the user add our AI into the meeting, it records the meeting's audio and sends it to the transcription module,
     which converts speech into text segments using Whisper.
@@ -38,7 +37,7 @@ At the end of the user's meeting, the system outputs the meeting's summaries, an
     When a user submits a query, it is processed by the agentic AI, which generates a response using both stored data and external information.
     Transcripts and summaries are stored in the database for later retrieval.
 
-    Finally, all outputs, including summaries, alerts, and query responses, are delivered to the user through the output interface in near real-time.
+    Finally, all outputs, including summaries, alerts, and query responses, are delivered to the user through the output interface shortly after processing.
 }
 
 \raggedright
@@ -61,22 +60,27 @@ At the end of the user's meeting, the system outputs the meeting's summaries, an
     \setlength{\parindent}{2em}
     The system adopts a modular approach by integrating multiple AI models, each designed for a specific task within the meeting workflow.
     \begin{itemize}
-        \item \textbf{Drift Detection}: A combination of an NLP-based model and an LLM Evaluator is used. The NLP-based model is trained on the TIAGE dataset to classify whether the conversation has deviated from the main topic. The LLM Evaluator provides additional context-aware analysis to improve detection accuracy and reduce false positives which we will be using \textbf{LLaMA 3.1 8B} or equivalent models.
-        \item \textbf{Speech-to-text Transcription}: A \textbf{Whisper} is used due to its strong performance in real-time transcription and multilingual support.
+        \item \textbf{Drift Detection}: A combination of an NLP-based model and an LLM Evaluator is utilized via a sliding-window algorithm with two-step validation. The live transcription stream is chunked into 50-second Time-Window Segments, advancing with a 25-second stride to capture continuous context. 
+        
+        For each 50-second segment, the system employs cascade validation:
+        \begin{itemize}
+            \item \textbf{Step 1 (NLP Filter):} The NLP model computes a drift confidence score against the agenda. If the score indicates high confidence of drift, the 50-second window is immediately flagged as "drifted." 
+            \item \textbf{Step 2 (LLM Confirmation):} If the NLP score indicates low or uncertain confidence, the 50-second transcript is forwarded to the \textbf{LLaMA 3.2 1B} LLM. The LLM performs a context-aware analysis to determine if the window should be flagged as "drifted."
+        \end{itemize}
+        To prevent false alarms triggered by acceptable social tangents, these individual window flags are aggregated over a broader 550-second (9-minute) rolling context. An active alert (a subtle visual nudge) is only triggered to the users if the total number of flagged 50-second windows within this 550-second span exceeds a configurable threshold.
+        \item \textbf{Speech-to-text Transcription}: A \textbf{Whisper} is used due to its strong performance in live transcription and multilingual support.
               The model will convert spoken audio into text, which serves as the foundation for further processing.
         \item \textbf{Question Answering}: A \textbf{BERT-based model (BertQA)} is used,
               because this model is effective at extracting precise answers from contextual data.
               It is integrated into an agentic system that retrieves relevant information from past meetings and generates context-aware responses.
         \item \textbf{Text Summarization}: The system will utilize \textbf{BART} for its strong performance in generating concise and meaningful summaries from long meeting transcripts.
-        \item \textbf{Task Management}: The \textbf{LLaMA 3.1 8B} or equivalent models will be used to identify and extract actionable tasks from meeting content. This model can detect responsibilities, deadlines, and action items from natural language.
+        \item \textbf{Task Management}: The \textbf{LLaMA 3.2 1B} or equivalent models will be used to identify and extract actionable tasks from meeting content. This model can detect responsibilities, deadlines, and action items from natural language.
     \end{itemize}
     All models are integrated into a pipeline where outputs from one component are used as inputs for others.
     For example, transcription feeds into summarization and question answering.
     Prompt engineering techniques are applied when interacting with large language models to ensure consistent and relevant outputs.
-    The selected models are chosen based on their effectiveness in natural language processing tasks and their ability to handle real-time conversational data.
+    The selected models are chosen based on their effectiveness in natural language processing tasks and their ability to handle live conversational data.
 }
-
-\pagebreak
 
 \subsection{Evaluation}
 {
